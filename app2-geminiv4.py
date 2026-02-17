@@ -339,6 +339,13 @@ def mentor_node(state: AgentState) -> AgentState:
 
     log("MENTOR_ENTER")
 
+    
+    # Otherwise, do normal alignment check
+    alignment, learner_state = check_blueprint_alignment(
+        state["problem"], state["chat"], state["mentor_blueprint"]
+    )
+    state["policy_alignment"] = alignment
+    state["learner_state"] = learner_state
      # If user has given correct answer before but alignment is not yet True
     if state["correct_answer_given_once"] and not state["policy_alignment"]:
         explanation_prompt = (
@@ -349,12 +356,6 @@ def mentor_node(state: AgentState) -> AgentState:
         log("MENTOR_REQUEST_EXPLANATION", explanation_prompt)
         return state
 
-    # Otherwise, do normal alignment check
-    alignment, learner_state = check_blueprint_alignment(
-        state["problem"], state["chat"], state["mentor_blueprint"]
-    )
-    state["policy_alignment"] = alignment
-    state["learner_state"] = learner_state
     system_prompt = f"""
     You are Naveen — a structural thinking mentor.
 
