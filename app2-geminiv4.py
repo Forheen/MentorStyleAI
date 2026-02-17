@@ -313,19 +313,14 @@ def check_final_answer_correctness(blueprint, text):
 # ROUTER (UNCHANGED)
 # ==================================================
 def router(state: AgentState):
-
     log("ROUTER_STATE", state)
 
+    if not state["correct_answer_given_once"]:
+        log("ROUTER_DECISION", "mentor (await correct answer)")
+        return "mentor"
+
     if not state["policy_alignment"]:
-        log("ROUTER_DECISION", "mentor (fix thinking)")
-        return "mentor"
-
-    if not state["final_answer_intent"]:
-        log("ROUTER_DECISION", "mentor (continue thinking)")
-        return "mentor"
-
-    if not state["final_answer_correct"]:
-        log("ROUTER_DECISION", "mentor (fix final step)")
+        log("ROUTER_DECISION", "mentor (await reasoning explanation)")
         return "mentor"
 
     log("ROUTER_DECISION", "solver")
@@ -338,12 +333,20 @@ def mentor_node(state: AgentState) -> AgentState:
 
     log("MENTOR_ENTER")
 
-    alignment, learner_state = check_blueprint_alignment(
-        state["problem"],
-        state["chat"],
-        state["mentor_blueprint"]
-    )
+     # If user has given correct answer before but alignment is not yet True
+    if state["correct_answer_given_once"] and not state["policy_alignment"]:
+        explanation_prompt = (
+            "Great! You have the correct answer. "
+            "Now, can you explain your reasoning step by step?"
+        )
+        state["chat"].append(("assistant", explanation_prompt))
+        log("MENTOR_REQUEST_EXPLANATION", explanation_prompt)
+        return state
 
+    # Otherwise, do normal alignment check
+    alignment, learner_state = check_blueprint_alignment(
+        state["problem"], state["chat"], state["mentor_blueprint"]
+    )
     state["policy_alignment"] = alignment
     state["learner_state"] = learner_state
     system_prompt = f"""
@@ -477,7 +480,8 @@ defaults = {
     "final_answer_correct": False,
     "solved": False,
     "learner_state": "",
-    "logs": []
+    "logs": [],
+    "correct_answer_given_once": False
 }
 
 for k, v in defaults.items():
@@ -531,24 +535,33 @@ if st.session_state.started:
         user_input = None
 
     if user_input:
-
         log("USER_INPUT", user_input)
-
         st.session_state.chat.append(("user", user_input))
 
-        st.session_state.final_answer_intent = detect_final_answer_intent(
-            st.session_state.problem,
-            user_input
-        )
+        # Detect if user is giving final answer
+        intent = detect_final_answer_intent(st.session_state.problem, user_input)
+        st.session_state.final_answer_intent = intent
 
-        if st.session_state.final_answer_intent:
-            st.session_state.final_answer_correct = check_final_answer_correctness(
-                st.session_state.mentor_blueprint,
-                user_input
-            )
+        if intent:
+            correct = check_final_answer_correctness(
+                   st.session_state.mentor_blueprint, user_input
+                )
+            st.session_state.final_answer_correct = correct
+
+             # Persist across turns if correct
+            if correct:
+                st.session_state.correct_answer_given_once = True
+
+        # Even if user only explains a step, check alignment
+        alignment, learner_state = check_blueprint_alignment(
+            st.session_state.problem, st.session_state.chat, st.session_state.mentor_blueprint
+        )
+        st.session_state.policy_alignment = alignment
+        st.session_state.learner_state = learner_state
 
         st.session_state.thinking = True
         st.rerun()
+
 
 if st.session_state.thinking:
 
