@@ -58,6 +58,7 @@ class AgentState(TypedDict):
     final_answer_correct: bool
     solved: bool
     learner_state: str
+    correct_answer_given_once: bool
 
 # ==================================================
 # LLM CALL (FULL LOG)
