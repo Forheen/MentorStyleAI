@@ -242,11 +242,14 @@ Return JSON:
         temperature=0
     )
 
+    cleaned = re.sub(r"```json|```", "", res).strip()
+
     try:
-        parsed = json.loads(res)
+        parsed = json.loads(cleaned)
         aligned = parsed["policy_alignment"].lower() == "yes"
         summary = parsed["learner_state_summary"]
-    except:
+    except Exception as e:
+        log("ALIGNMENT_JSON_ERROR", str(e))
         aligned = False
         summary = "Unable to parse learner state."
 
