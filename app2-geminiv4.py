@@ -577,7 +577,8 @@ if st.session_state.thinking:
         "final_answer_intent": st.session_state.final_answer_intent,
         "final_answer_correct": st.session_state.final_answer_correct,
         "solved": False,
-        "learner_state": st.session_state.learner_state
+        "learner_state": st.session_state.learner_state,
+            "correct_answer_given_once": st.session_state.correct_answer_given_once 
     })
 
     for k in result:
