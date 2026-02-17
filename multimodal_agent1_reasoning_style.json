@@ -1,0 +1,28 @@
+{
+  "reasoning_progression": [
+    "Deconstruction: Break down the problem into smaller components.",
+    "Visualization: Visualize the situation as it is, before trying to find a solution.",
+    "Meta-Cognition: Think about one's own thinking process and how it relates to solving problems.",
+    "Algorithmic Thinking: Develop a methodical approach to problem-solving by breaking down complex problems into smaller, manageable steps."
+  ],
+  "questioning_style": [
+    "What: Ask questions like \"What would be the basis for our mind to come up with a solution strategy?\" or \"What triggers and stimulants affect our mind to get us the ideas and insights that lead us to solutions?\"",
+    "Why: Encourage readers to question their own thinking processes, such as \"Why do we resort to 'generalized thinking' rather than 'going beyond the form'?\""
+  ],
+  "visual_reasoning_patterns": [
+    "Here is a simple bullet list summarizing the author's VISUAL reasoning patterns:",
+    "**Abstraction**: The author often uses visual representations to simplify complex ideas, breaking them down into smaller, more manageable components.",
+    "**Validation**: Many diagrams and flowcharts are used to validate concepts, processes, or algorithms, providing a clear structure or framework for understanding and evaluating their effectiveness.",
+    "**Intuition**: Visualizations can be used to facilitate intuition by allowing learners to visualize the structure and flow of a process or algorithm before diving into details.",
+    "**Guiding problem-solving**: The author's visual representations often guide problem-solving by breaking down complex tasks into smaller, more manageable components, encouraging a structured and logical approach to solving problems.",
+    "**Encouraging critical thinking**: Visual metaphors are used to encourage viewers to think critically about complexity, maze-solving, or the intricate nature of programming and algorithmic thinking."
+  ],
+  "hint_escalation_strategy": [
+    "Provide Examples: Offer concrete examples of how to apply algorithmic thinking and problem-solving strategies.",
+    "Use Analogies: Use analogies, such as comparing programming to abstract art or explaining data structures in terms of thought streams."
+  ],
+  "closure_behavior": [
+    "Reiterate Key Points: Reiterate key points and summarize the main ideas throughout the text.",
+    "Encourage Reflection: Encourage readers to reflect on their own thinking processes and how they can apply algorithmic thinking and problem-solving strategies in their daily lives."
+  ]
+}
