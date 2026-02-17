@@ -316,17 +316,18 @@ def check_final_answer_correctness(blueprint, text):
 def router(state: AgentState):
     log("ROUTER_STATE", state)
 
-    # Step 1: If user has not given correct answer yet → mentor
-    if not state.get("correct_answer_given_once", False):
-        log("ROUTER_DECISION", "mentor (await correct answer)")
+    if not state["policy_alignment"]:
+        log("ROUTER_DECISION", "mentor (fix thinking)")
         return "mentor"
 
-    # Step 2: If correct answer exists but reasoning is misaligned → mentor
-    if not state.get("policy_alignment", False):
-        log("ROUTER_DECISION", "mentor (await reasoning explanation/alignment)")
+    if not state["final_answer_intent"]:
+        log("ROUTER_DECISION", "mentor (continue thinking)")
         return "mentor"
 
-    # Step 3: Otherwise, both correct answer + aligned → solver
+    if not state["final_answer_correct"]:
+        log("ROUTER_DECISION", "mentor (fix final step)")
+        return "mentor"
+
     log("ROUTER_DECISION", "solver")
     return "solver"
 
