@@ -14,8 +14,8 @@ from google.genai import types
 GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
 client = genai.Client(api_key=GEMINI_API_KEY)
 
-MENTOR_MODEL = "gemini-3-pro-preview"
-SOLVER_MODEL = "gemini-3-pro-preview"
+MENTOR_MODEL = "gemini-1.5-flash"
+SOLVER_MODEL = "gemini-1.5-flash"
 # IMAGE_MODEL = "gemini-3-pro-image-preview"   # 🔥 Commented
 
 st.set_page_config(
