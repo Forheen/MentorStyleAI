@@ -508,14 +508,7 @@ with st.sidebar:
 if not st.session_state.started:
     p = st.text_area("Enter the problem")
 
-    start_clicked = st.button(
-        "Start",
-        disabled=st.session_state.thinking
-    )
-
-    if start_clicked and p:
-
-        st.session_state.thinking = True  # disable button immediately
+    if st.button("Start") and p:
 
         log("SESSION_START", p)
 
@@ -528,7 +521,6 @@ if not st.session_state.started:
         initial_text = "Alright 🙂 Let’s begin. What do you notice first?"
         st.session_state.chat.append(("assistant", initial_text))
 
-        st.session_state.thinking = False  # re-enable after done
         st.rerun()
 
 if st.session_state.started:
