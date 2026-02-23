@@ -144,39 +144,46 @@ Instructions:
 # ==================================================
 # RENDER STRUCTURE
 # ==================================================
+# ==================================================
+# RENDER STRUCTURE (ALIGNED WITH YOUR JSON)
+# ==================================================
 def render_deconstruction(data):
 
     if not data:
         st.error("Failed to generate structured output.")
         return
 
-    st.title(f"🧠 {data.get('title', 'Structural Deconstruction')}")
+    st.title("🧠 Structural Deconstruction")
 
     st.markdown("---")
 
+    # Reasoning Stages
     for stage in data.get("reasoning_stages", []):
         with st.container():
-            st.subheader(f"🔎 {stage.get('stage_name')}")
+            st.subheader(f"🔎 Stage {stage.get('stage')}")
             st.markdown(f"**Goal:**  \n{stage.get('goal')}")
             st.markdown(f"**Concept Focus:**  \n{stage.get('concept_focus')}")
-            st.markdown(f"**Deep Insight:**  \n{stage.get('deep_insight')}")
-            st.markdown(f"**Execution Outline:**  \n{stage.get('execution_outline')}")
+            st.markdown(f"**Expected Student Action:**  \n{stage.get('expected_student_action')}")
             st.markdown("---")
 
-    if data.get("alternative_structures"):
+    # Alternative Paths
+    if data.get("valid_alternative_paths"):
         st.subheader("🧩 Alternative Structural Paths")
-        for alt in data["alternative_structures"]:
+        for alt in data["valid_alternative_paths"]:
             st.markdown(f"- {alt}")
         st.markdown("---")
 
-    if data.get("common_structural_mistakes"):
+    # Common Mistakes
+    if data.get("common_mistakes"):
         st.subheader("⚠️ Common Structural Mistakes")
-        for mistake in data["common_structural_mistakes"]:
+        for mistake in data["common_mistakes"]:
             st.markdown(f"- {mistake}")
         st.markdown("---")
 
-    st.subheader("🎯 Final Structural Answer")
-    st.success(data.get("final_structural_answer", ""))
+    # Final Answer
+    if data.get("final_answer"):
+        st.subheader("🎯 Final Structural Answer")
+        st.success(data.get("final_answer"))
 
 # ==================================================
 # UI
