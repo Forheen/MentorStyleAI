@@ -580,7 +580,11 @@ with st.sidebar:
     for entry in st.session_state.logs:
         st.json(entry)
 
+# ==================================================
+# START SCREEN
+# ==================================================
 if not st.session_state.started:
+
     p = st.text_area("Enter the problem")
 
     if st.button("Start") and p:
@@ -590,31 +594,41 @@ if not st.session_state.started:
         st.session_state.problem = p
         st.session_state.started = True
 
-        with st.spinner("Generating structural breakdown..."):
-            
+        # 🔥 Spinner wraps BOTH generations
+        with st.spinner("Generating structural breakdown and visual diagram..."):
+
             blueprint = generate_blueprint(p)
             st.session_state.mentor_blueprint = blueprint
-        
-        render_deconstruction(st.session_state.mentor_blueprint)
 
-        st.markdown("## 🖼 Visual Structural Diagram")
+            image_data, mime_type = generate_visual_image(p, blueprint)
+            st.session_state.generated_image = image_data
 
-        with st.spinner("Generating visual diagram..."):
-            image_data, mime_type = generate_visual_image(p, st.session_state.mentor_blueprint)
-        
-        if image_data:
-            st.image(image_data)    
-        else:
-            st.info("Failed to generate visual diagram.")
-        
+        # Optional initial mentor message
         initial_text = "Alright 🙂 Let’s begin. What do you notice first?"
         st.session_state.chat.append(("assistant", initial_text))
 
         st.rerun()
 
+
+# ==================================================
+# MAIN SESSION
+# ==================================================
 if st.session_state.started:
 
     st.info(st.session_state.problem)
+
+    # 🔥 Render blueprint AFTER rerun (persistent)
+    if st.session_state.mentor_blueprint:
+        render_deconstruction(st.session_state.mentor_blueprint)
+
+    # 🔥 Render image AFTER rerun (persistent)
+    if st.session_state.get("generated_image"):
+        st.markdown("## 🖼 Visual Structural Diagram")
+        st.image(st.session_state.generated_image)
+    else:
+        st.info("Failed to generate visual diagram.")
+
+    # ================= CHAT SECTION =================
 
     for role, msg in st.session_state.chat:
         with st.chat_message(role):
@@ -631,34 +645,37 @@ if st.session_state.started:
         user_input = None
 
     if user_input:
+
         log("USER_INPUT", user_input)
         st.session_state.chat.append(("user", user_input))
 
-        # Detect if user is giving final answer
-        intent = detect_final_answer_intent(st.session_state.problem, user_input)
+        intent = detect_final_answer_intent(
+            st.session_state.problem, user_input
+        )
         st.session_state.final_answer_intent = intent
 
         if intent:
             correct = check_final_answer_correctness(
-                   st.session_state.mentor_blueprint, user_input
-                )
+                st.session_state.mentor_blueprint,
+                user_input
+            )
             st.session_state.final_answer_correct = correct
 
-             # Persist across turns if correct
             if correct:
                 st.session_state.correct_answer_given_once = True
 
-        # Even if user only explains a step, check alignment
         alignment, learner_state = check_blueprint_alignment(
-            st.session_state.problem, st.session_state.chat, st.session_state.mentor_blueprint
+            st.session_state.problem,
+            st.session_state.chat,
+            st.session_state.mentor_blueprint
         )
+
         st.session_state.policy_alignment = alignment
         st.session_state.learner_state = learner_state
 
         st.session_state.thinking = True
         st.rerun()
-
-
+        
 if st.session_state.thinking:
 
     log("GRAPH_EXEC_START")
