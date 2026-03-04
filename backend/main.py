@@ -1,7 +1,7 @@
 # main.py
 
 from fastapi import FastAPI
-from api.ai_tutor.routes import router as ai_tutor_router
+from backend.api.ai_tutor.routes import router as ai_tutor_router
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(
