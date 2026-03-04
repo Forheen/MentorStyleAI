@@ -1,9 +1,10 @@
 # api/ai_tutor/service.py
 
-import json
+import json 
 import re
 import base64
-import google.generativeai as genai
+import google as genai
+from google.genai import types
 from core.config import GEMINI_API_KEY, TEXT_MODEL, IMAGE_MODEL
 
 
