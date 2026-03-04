@@ -3,17 +3,20 @@
 import json 
 import re
 import base64
-import google as genai
-from google.genai import types
+import os
+
+import google.generativeai as genai
 from backend.core.config import GEMINI_API_KEY, TEXT_MODEL, IMAGE_MODEL
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+POLICY_PATH = os.path.join(BASE_DIR, "multimodal_agent1_reasoning_style.json")
 
 # Configure Gemini
 genai.configure(api_key=GEMINI_API_KEY)
 
 def load_policy():
-    with open("multimodal_agent1_reasoning_style.json") as f:
-        return json.load(f)
+    with open(POLICY_PATH) as f:
+      return json.load(f)
 
 policy = load_policy()
 # ==================================================
