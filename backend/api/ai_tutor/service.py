@@ -5,7 +5,7 @@ import re
 import base64
 import google as genai
 from google.genai import types
-from core.config import GEMINI_API_KEY, TEXT_MODEL, IMAGE_MODEL
+from backend.core.config import GEMINI_API_KEY, TEXT_MODEL, IMAGE_MODEL
 
 
 # Configure Gemini
