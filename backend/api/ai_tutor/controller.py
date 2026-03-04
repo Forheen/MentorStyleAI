@@ -1,6 +1,6 @@
 # api/ai_tutor/controller.py
 
-from api.ai_tutor.service import (
+from backend.api.ai_tutor.service import (
     generate_deconstruction,
     generate_visual_image
 )

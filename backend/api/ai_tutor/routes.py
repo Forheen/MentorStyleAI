@@ -1,8 +1,8 @@
 # api/ai_tutor/routes.py
 
 from fastapi import APIRouter, HTTPException
-from api.ai_tutor.schemas import TutorRequest
-from api.ai_tutor.controller import generate_tutor
+from backend.api.ai_tutor.schemas import TutorRequest
+from backend.api.ai_tutor.controller import generate_tutor
 
 router = APIRouter()
 
