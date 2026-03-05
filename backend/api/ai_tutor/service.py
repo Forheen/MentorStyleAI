@@ -76,6 +76,7 @@ def generate_deconstruction(problem: str):
         "Common mechanical deviation"
       ],
       "final_answer": "Correct final answer only (no explanation)",
+      "normal_explanation": "A normal explanation of the solution with answer, without emphasizing structural insights.",
       "final_explanation": "The blueprint has been extracted and a correct final answer has been received.Provide: Final explanation of how the reasoning stages led to the solution, emphasizing structural insights.",
       "key_reasoning_lessons": [
         "Key insight or lesson from the reasoning process"
