@@ -117,15 +117,15 @@ OUTPUT FORMAT
 
 Return STRICT JSON only.
 
-{
+{{
   "difficulty_level": "Level 1 | Level 2 | Level 3 | Level 4",
   "reasoning_stages": [
-    {
+    {{
       "stage": "<stage_name_from_policy>",
       "goal": "...",
       "concept_focus": "...",
       "expected_student_action": "..."
-    }
+    }}
   ],
   "valid_alternative_paths": [
     "Alternative structural reasoning aligned with policy"
@@ -134,7 +134,7 @@ Return STRICT JSON only.
     "Common mechanical deviation"
   ],
   "final_answer": "Correct final answer only"
-}
+}}
 """
 
     response = client.models.generate_content(
