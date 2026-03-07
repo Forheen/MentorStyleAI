@@ -34,97 +34,67 @@ policy = load_policy()
 # GENERATE STRUCTURAL JSON
 # ==================================================
 def generate_deconstruction(problem):
-
-    reasoning_stages = "\n".join(policy["reasoning_progression"])
-
     output_schema = """
     {
-    "difficulty_level": "Level 1 | Level 2 | Level 3 | Level 4",
-    "reasoning_stages": [
-        {
-        "stage": "<stage_name_from_policy>",
-        "goal": "...",
-        "concept_focus": "...",
-        "expected_student_action": "..."
-        }
+    "final_explanation": "...",
+    "key_reasoning_lessons": [
+        "...",
+        "..."
     ],
-    "valid_alternative_paths": [
-        "Alternative structural reasoning"
-    ],
-    "common_mistakes": [
-        "Common conceptual mistake"
-    ],
-    "final_answer": "Correct final answer only"
+    "final_answer": "..."
     }
     """
 
     system_prompt = f"""
     You are an expert mentor with deep structural intuition.
 
-    Use the following reasoning policy as the single guiding framework:
+    Use the following reasoning policy as the guiding framework:
 
     {json.dumps(policy, indent=2)}
 
-    --------------------------------
+    ------------------------------------------------
     PROBLEM ANALYSIS
-    --------------------------------
+    ------------------------------------------------
 
-    Before producing reasoning, classify the problem difficulty.
+    First determine the conceptual structure of the problem before solving it.
 
-    Level 1 — Trivial
-    Direct arithmetic or single-step equation.
+    Prefer understanding relationships between quantities rather than performing procedural calculations.
 
-    Level 2 — Basic
-    Short multi-step reasoning.
+    ------------------------------------------------
+    REASONING PRINCIPLES
+    ------------------------------------------------
 
-    Level 3 — Conceptual
-    Requires recognizing relationships, patterns, or structural insight.
+    1. Prefer structural insight over mechanical solving.
+    2. Avoid unnecessary algebraic setup.
+    3. Seek patterns, ratios, invariants, or conserved relationships.
+    4. Computation should follow insight, not precede it.
+    5. Keep reasoning concise and concept-focused.
 
-    Level 4 — Deep Insight
-    Requires non-obvious structural reasoning.
+    ------------------------------------------------
+    EXPLANATION STYLE
+    ------------------------------------------------
 
-    --------------------------------
-    REASONING DEPTH
-    --------------------------------
+    Provide a clear mentor-style explanation that reveals the core insight of the problem.
 
-    Adapt reasoning depth based on difficulty.
+    Avoid step-by-step procedural solving unless absolutely necessary.
 
-    Level 1
-    Use minimal reasoning. Usually 1–2 stages.
+    Focus on explaining:
 
-    Level 2
-    Use 2–3 stages.
+    • What key insight unlocks the problem  
+    • Why that insight works  
+    • What structural observation simplifies the reasoning  
 
-    Level 3–4
-    Use the full reasoning progression defined in the policy.
-
-    --------------------------------
-    REASONING STAGES
-    --------------------------------
-
-    The reasoning stages are defined by the policy as:
-
-    {reasoning_stages}
-
-    Use only the stages that meaningfully contribute to solving the problem.
-    Skip stages if they add no conceptual value.
-
-    --------------------------------
-    STRUCTURAL REASONING PRINCIPLES
-    --------------------------------
-
-    1. Prefer conceptual structure over procedural solving.
-    2. Avoid grind-based computation.
-    3. Identify relationships between quantities.
-    4. Prefer symmetry, invariants, ratios, or conserved relationships when present.
-    5. Computation should follow insight.
-    6. Keep explanations concise.
-
-    --------------------------------
+    ------------------------------------------------
     OUTPUT FORMAT
-    --------------------------------
+    ------------------------------------------------
 
     Return STRICT JSON only.
+
+    Provide:
+
+    1. Final explanation
+    2. Key reasoning lessons
+    3. Final answer
 
     {output_schema}
     """
