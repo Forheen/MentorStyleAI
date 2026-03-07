@@ -35,60 +35,105 @@ policy = load_policy()
 # ==================================================
 def generate_deconstruction(problem):
 
+    reasoning_stages = "\n".join(policy["reasoning_progression"])
+
+    output_schema = """
+    {
+    "difficulty_level": "Level 1 | Level 2 | Level 3 | Level 4",
+    "reasoning_stages": [
+        {
+        "stage": "<stage_name_from_policy>",
+        "goal": "...",
+        "concept_focus": "...",
+        "expected_student_action": "..."
+        }
+    ],
+    "valid_alternative_paths": [
+        "Alternative structural reasoning"
+    ],
+    "common_mistakes": [
+        "Common conceptual mistake"
+    ],
+    "final_answer": "Correct final answer only"
+    }
+    """
+
     system_prompt = f"""
-You are an expert mentor with deep structural intuition.
+    You are an expert mentor with deep structural intuition.
 
-Use the following reasoning policy as the guiding framework for thinking:
+    Use the following reasoning policy as the single guiding framework:
 
-    {json.dumps(policy)}
+    {json.dumps(policy, indent=2)}
 
-Before generating reasoning, classify the problem difficulty (Level 1–4) and adjust your explanation depth accordingly. 
-- *Level 1 (Trivial):* Keep reasoning extremely concise (one short sentence per stage, no extra insight).
-- *Level 2–4:* Gradually allow more detail as needed.
+    --------------------------------
+    PROBLEM ANALYSIS
+    --------------------------------
 
-REASONING DEPTH RULE:
-If Level 1, do only essential steps. If Level 2, provide brief guidance. If Level 3–4, use full structural reasoning.
+    Before producing reasoning, classify the problem difficulty.
 
-DYNAMICS:
-Only use the minimum stages needed. For trivial problems, skip visualization and meta-cognition if they don’t add value.
+    Level 1 — Trivial
+    Direct arithmetic or single-step equation.
 
-COGNITIVE RULES:
-    1. Prefer structural insight over procedural or formula-driven solving.
-    2. Avoid introducing symbolic variables unless absolutely unavoidable.
-    3. Avoid grind-based computation.
-    4. Seek invariants, symmetries, conserved quantities, structural patterns, or conceptual compressions.
-    5. If multiple solution paths exist, prefer the one that reveals the underlying structure.
-    6. Computation must follow insight, not precede it.
-    7. The reasoning should feel elegant and conceptually clear, not mechanical.
-    8. Emphasize alignment between the learner’s internal model and the structure of the problem.
-    9. Reflect meta-cognitive awareness of how insight emerged.
+    Level 2 — Basic
+    Short multi-step reasoning.
 
+    Level 3 — Conceptual
+    Requires recognizing relationships, patterns, or structural insight.
 
-OUTPUT FORMAT (STRICT JSON):
-Return a JSON object with these keys:
-{{
-  "difficulty_level": "...",
-  "reasoning_stages": [
-    {{
-      "stage": "<StageName>",
-      "goal": "...",
-      "concept_focus": "...",
-      "expected_student_action": "..."
-    }}
-    // ... additional stages as needed ...
-  ],
-  "valid_alternative_paths": [ "..."],
-  "common_mistakes": [ "..."],
-  "final_answer": "..."
-}}
+    Level 4 — Deep Insight
+    Requires non-obvious structural reasoning.
 
-"""
+    --------------------------------
+    REASONING DEPTH
+    --------------------------------
+
+    Adapt reasoning depth based on difficulty.
+
+    Level 1
+    Use minimal reasoning. Usually 1–2 stages.
+
+    Level 2
+    Use 2–3 stages.
+
+    Level 3–4
+    Use the full reasoning progression defined in the policy.
+
+    --------------------------------
+    REASONING STAGES
+    --------------------------------
+
+    The reasoning stages are defined by the policy as:
+
+    {reasoning_stages}
+
+    Use only the stages that meaningfully contribute to solving the problem.
+    Skip stages if they add no conceptual value.
+
+    --------------------------------
+    STRUCTURAL REASONING PRINCIPLES
+    --------------------------------
+
+    1. Prefer conceptual structure over procedural solving.
+    2. Avoid grind-based computation.
+    3. Identify relationships between quantities.
+    4. Prefer symmetry, invariants, ratios, or conserved relationships when present.
+    5. Computation should follow insight.
+    6. Keep explanations concise.
+
+    --------------------------------
+    OUTPUT FORMAT
+    --------------------------------
+
+    Return STRICT JSON only.
+
+    {output_schema}
+    """
 
     response = client.models.generate_content(
         model=TEXT_MODEL,
         config=types.GenerateContentConfig(
             system_instruction=system_prompt,
-            temperature=0
+            temperature=0.2
         ),
         contents=f"Problem:\n{problem}"
     )
