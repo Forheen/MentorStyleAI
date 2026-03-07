@@ -161,41 +161,30 @@ Instructions:
 def render_deconstruction(data):
 
     if not data:
-        st.error("Failed to generate structured output.")
+        st.error("Failed to generate output.")
         return
 
-    st.title("🧠 Structural Deconstruction")
+    st.title("🧠 Structural Explanation")
 
     st.markdown("---")
 
-    # Reasoning Stages
-    for stage in data.get("reasoning_stages", []):
-        with st.container():
-            st.subheader(f"🔎 Stage {stage.get('stage')}")
-            st.markdown(f"**Goal:**  \n{stage.get('goal')}")
-            st.markdown(f"**Concept Focus:**  \n{stage.get('concept_focus')}")
-            st.markdown(f"**Expected Student Action:**  \n{stage.get('expected_student_action')}")
-            st.markdown("---")
-
-    # Alternative Paths
-    if data.get("valid_alternative_paths"):
-        st.subheader("🧩 Alternative Structural Paths")
-        for alt in data["valid_alternative_paths"]:
-            st.markdown(f"- {alt}")
+    # Final Explanation
+    if data.get("final_explanation"):
+        st.subheader("📘 Final Explanation")
+        st.write(data["final_explanation"])
         st.markdown("---")
 
-    # Common Mistakes
-    if data.get("common_mistakes"):
-        st.subheader("⚠️ Common Structural Mistakes")
-        for mistake in data["common_mistakes"]:
-            st.markdown(f"- {mistake}")
+    # Key Reasoning Lessons
+    if data.get("key_reasoning_lessons"):
+        st.subheader("🧠 Key Reasoning Lessons")
+        for lesson in data["key_reasoning_lessons"]:
+            st.markdown(f"- {lesson}")
         st.markdown("---")
 
     # Final Answer
     if data.get("final_answer"):
-        st.subheader("🎯 Final Structural Answer")
-        st.success(data.get("final_answer"))
-
+        st.subheader("🎯 Final Answer")
+        st.success(data["final_answer"])
 # ==================================================
 # UI
 # ==================================================
