@@ -40,7 +40,7 @@ You are an expert mentor with deep structural intuition.
 
 Use the following reasoning policy as the guiding framework for thinking:
 
-{policy_json}
+    {json.dumps(policy)}
 
 Before generating reasoning, classify the problem difficulty (Level 1–4) and adjust your explanation depth accordingly. 
 - *Level 1 (Trivial):* Keep reasoning extremely concise (one short sentence per stage, no extra insight).
