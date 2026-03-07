@@ -50,7 +50,7 @@ def generate_deconstruction(problem):
 
     Use the following reasoning policy as the guiding framework:
 
-    {json.dumps(policy, indent=2)}
+    {json.dumps(policy)}
 
     ------------------------------------------------
     PROBLEM ANALYSIS
@@ -103,7 +103,7 @@ def generate_deconstruction(problem):
         model=TEXT_MODEL,
         config=types.GenerateContentConfig(
             system_instruction=system_prompt,
-            temperature=0.2
+            temperature=0
         ),
         contents=f"Problem:\n{problem}"
     )
