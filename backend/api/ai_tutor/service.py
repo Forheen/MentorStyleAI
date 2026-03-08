@@ -2,6 +2,7 @@ import json
 import re
 import base64
 import os
+
 import uuid
 
 from typing import TypedDict, List, Tuple
@@ -10,13 +11,13 @@ from backend.core.gemini_client import client
 from backend.core.config import TEXT_MODEL, IMAGE_MODEL
 from google.genai import types
 from langgraph.graph import StateGraph, END
+from backend.core.redis_client import redis_client
 
 
 # ==================================================
 # SESSION STORE
 # ==================================================
 
-sessions = {}
 
 # ==================================================
 # LOAD POLICY
@@ -457,7 +458,11 @@ def start_chat(problem):
         "correct_answer_given_once": False
     }
 
-    sessions[session_id] = state
+    redis_client.set(
+      f"chat:{session_id}",
+      json.dumps(state),
+      ex=3600
+    )
 
     return session_id, state["chat"][-1][1]
 
@@ -468,10 +473,12 @@ def start_chat(problem):
 
 def chat_message(session_id, message):
 
-    state = sessions.get(session_id)
+    data = redis_client.get(f"chat:{session_id}")
 
-    if not state:
+    if not data:
         return "Session expired. Please restart the chat.", False
+
+    state = json.loads(data)
 
     state["chat"].append(("user", message))
 
@@ -500,10 +507,14 @@ def chat_message(session_id, message):
 
     result = app_graph.invoke(state)
 
-    sessions[session_id] = result
+    # Save updated session
+    redis_client.set(
+        f"chat:{session_id}",
+        json.dumps(result),
+        ex=3600
+    )
 
     return result["chat"][-1][1], result["solved"]
-
 # ==================================================
 # LANGGRAPH
 # ==================================================
@@ -525,3 +536,4 @@ graph.add_edge("mentor", END)
 graph.add_edge("solver", END)
 
 app_graph = graph.compile()
+
