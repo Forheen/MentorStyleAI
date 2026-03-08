@@ -1,8 +1,8 @@
 # api/ai_tutor/routes.py
 
 from fastapi import APIRouter, HTTPException
-from backend.api.ai_tutor.schemas import TutorRequest
-from backend.api.ai_tutor.controller import generate_tutor
+from backend.api.ai_tutor.schemas import *
+from backend.api.ai_tutor.controller import *
 
 router = APIRouter()
 
@@ -18,48 +18,18 @@ def generate(request: TutorRequest):
     return result
 
 
-# api/ai_tutor/controller.py
+# ---------- CHAT ----------
 
-from backend.api.ai_tutor.service import (
-    generate_deconstruction,
-    generate_visual_image,
-    start_chat,
-    chat_message
-)
+@router.post("/chat/start")
+def chat_start(request: ChatStartRequest):
+
+    return start_chat_controller(request.problem)
 
 
-def generate_tutor(problem: str):
+@router.post("/chat/message")
+def chat_message_api(request: ChatMessageRequest):
 
-    structured_data = generate_deconstruction(problem)
-
-    if not structured_data:
-        return None
-
-    image = generate_visual_image(problem, structured_data)
-
-    return {
-        "structured_data": structured_data,
-        "image": image
-    }
-
-
-# -------- CHAT ----------
-
-def start_chat_controller(problem: str):
-
-    session_id, reply = start_chat(problem)
-
-    return {
-        "session_id": session_id,
-        "reply": reply
-    }
-
-
-def chat_message_controller(session_id: str, message: str):
-
-    reply, solved = chat_message(session_id, message)
-
-    return {
-        "reply": reply,
-        "solved": solved
-    }
+    return chat_message_controller(
+        request.session_id,
+        request.message
+    )
