@@ -5,3 +5,4 @@ google-genai
 pydantic
 google-genai>=0.3.0
 streamlit>=1.32.0
+langgraph
