@@ -37,11 +37,18 @@ def start_chat_controller(problem: str):
 
 def chat_message_controller(session_id: str, message: str):
 
-    reply, solved = chat_message(session_id, message)
+    result = chat_message(session_id, message)
+
+    if not result:
+        return {
+            "reply": "Chat session not found.",
+            "solved": False
+        }
+
+    reply, solved = result
 
     return {
         "reply": reply,
         "solved": solved
     }
-
 

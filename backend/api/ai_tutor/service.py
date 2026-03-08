@@ -471,16 +471,14 @@ def chat_message(session_id, message):
     state = sessions.get(session_id)
 
     if not state:
-        return None
+        return "Session expired. Please restart the chat.", False
 
     state["chat"].append(("user", message))
 
     intent = detect_final_answer_intent(state["problem"], message)
-
     state["final_answer_intent"] = intent
 
     if intent:
-
         correct = check_final_answer_correctness(
             state["mentor_blueprint"],
             message
@@ -505,7 +503,6 @@ def chat_message(session_id, message):
     sessions[session_id] = result
 
     return result["chat"][-1][1], result["solved"]
-
 
 # ==================================================
 # LANGGRAPH
