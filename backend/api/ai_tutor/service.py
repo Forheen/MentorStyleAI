@@ -313,33 +313,89 @@ def router(state: AgentState):
 # STRUCTURAL DECONSTRUCTION
 # ==================================================
 
-def generate_deconstruction(problem: str):
+def generate_deconstruction(problem):
+    output_schema = """
+    {
+    "final_explanation": "...",
+    "key_reasoning_lessons": [
+        "...",
+        "..."
+    ],
+    "final_answer": "..."
+    }
+    """
 
     system_prompt = f"""
-Use this reasoning policy:
-{json.dumps(policy)}
+    You are Navin — a structural thinking mentor.
 
-Return JSON with:
+    Reasoning Policy:
+    {json.dumps(policy)}
 
-final_answer
-final_explanation
-key_reasoning_lessons
-"""
+    Your task is to first internally derive the structural blueprint of the
+    problem and then produce a clear mentor-style explanation.
+
+    ------------------------------------------------
+    INTERNAL PROCESS (DO NOT OUTPUT)
+    ------------------------------------------------
+
+    1. Deconstruct the problem structure.
+    2. Identify invariants, ratios, symmetries, or conserved quantities.
+    3. Determine the structural reasoning path that solves the problem.
+    4. Only after identifying the structural insight, compute the final result.
+
+    Important:
+    Do NOT expose these internal reasoning stages in the output.
+
+    ------------------------------------------------
+    EXPLANATION STYLE
+    ------------------------------------------------
+
+    Provide a clear mentor-style explanation that reveals the key insight
+    that unlocks the problem.
+
+    The explanation should feel like a mentor synthesizing the reasoning,
+    not like a step-by-step procedural solution.
+
+    Prefer conceptual explanations such as:
+
+    • identifying invariant quantities
+    • using ratios or proportional reasoning
+    • recognizing structural shortcuts
+    • explaining why the insight works
+
+    Avoid mechanical algebra unless absolutely necessary.
+
+    ------------------------------------------------
+    OUTPUT FORMAT
+    ------------------------------------------------
+
+    Return STRICT JSON only.
+
+    Provide:
+
+    1. Final explanation
+    2. Key reasoning lessons
+    3. Final answer
+
+    {output_schema}
+    """
 
     response = client.models.generate_content(
         model=TEXT_MODEL,
-        contents=f"{system_prompt}\n\nProblem:\n{problem}",
-        config=types.GenerateContentConfig(temperature=0)
+        config=types.GenerateContentConfig(
+            system_instruction=system_prompt,
+            temperature=0
+        ),
+        contents=f"Problem:\n{problem}"
     )
 
-    raw_text = response.text.strip()
-
-    cleaned = re.sub(r"```json|```", "", raw_text).strip()
+    raw = response.text.strip()
+    cleaned = re.sub(r"```json|```", "", raw).strip()
 
     try:
         return json.loads(cleaned)
     except:
-        return None
+        return {}
 
 
 # ==================================================
