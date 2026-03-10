@@ -383,6 +383,7 @@ def router(state: AgentState):
 def generate_deconstruction(problem):
     output_schema = """
     {
+     "normal_explanation": "A normal explanation of the solution with answer, without emphasizing structural insights.",
     "final_explanation": "...",
     "key_reasoning_lessons": [
         "...",
