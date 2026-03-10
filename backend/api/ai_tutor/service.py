@@ -81,20 +81,58 @@ def call_gemini(system_prompt, user_prompt, temperature=0.4):
 def generate_blueprint(problem):
 
     system_prompt = f"""
-You are an expert mentor with deep structural intuition.
+    You are an expert mentor with deep structural intuition.
 
-Use this reasoning policy strictly:
-{json.dumps(policy)}
+    Use this reasoning policy strictly:
+    {json.dumps(policy)}
 
-Return STRICT JSON:
+    CRITICAL COGNITIVE RULES:
 
-{{
- "reasoning_stages": [],
- "valid_alternative_paths": [],
- "common_mistakes": [],
- "final_answer": ""
-}}
+    1. Prefer structural insight over procedural or formula-driven solving.
+    2. Avoid introducing symbolic variables unless absolutely unavoidable.
+    3. Avoid grind-based computation.
+    4. Seek invariants, symmetries, conserved quantities, structural patterns, or conceptual compressions.
+    5. If multiple solution paths exist, prefer the one that reveals the underlying structure.
+    6. Computation must follow insight, not precede it.
+    7. The reasoning should feel elegant and conceptually clear, not mechanical.
+    8. Emphasize alignment between the learner’s internal model and the structure of the problem.
+    9. Reflect meta-cognitive awareness of how insight emerged.
+
+    You must explicitly structure reasoning stages according to:
+
+    - Deconstruction
+    - Visualization
+    - Meta-Cognition
+    - Algorithmic Thinking
+
+    Each stage must reflect conceptual understanding first, and only then methodical execution.
+
+    Do NOT:
+    - Default to textbook algebra or mechanical solving
+    - Begin with equations unless structurally necessary
+    - Overemphasize computation
+
+    Return STRICT JSON only:
+
+    {{
+      "reasoning_stages": [
+        {{
+          "stage": 1,
+          "goal": "...",
+          "concept_focus": "...",
+          "expected_student_action": "..."
+        }}
+      ],
+      "valid_alternative_paths": [
+        "Alternative structural reasoning aligned with policy"
+      ],
+      "common_mistakes": [
+        "Common mechanical deviation"
+      ],
+      "final_answer": "Correct final answer only (no explanation)"
+    }}
 """
+
 
     raw = call_gemini(
         system_prompt,
@@ -129,10 +167,12 @@ YES or NO
 """
 
     res = call_gemini(
-        "Detect answer intent",
+        "FINAL_ANSWER_INTENT",
+        "Detect answer intent only.",
         prompt,
         temperature=0
     )
+
 
     return "yes" in res.lower()
 
@@ -158,27 +198,27 @@ def check_final_answer_correctness(blueprint, text):
 def check_blueprint_alignment(problem, chat, blueprint):
 
     prompt = f"""
-Check the learner's thinking style.
+            Check the learner's THINKING STYLE and compare the alignment of the chat with the blueprint derived from the policy alignment
 
-Blueprint:
-{json.dumps(blueprint)}
+            Blueprint:
+            {json.dumps(blueprint)}
 
-Problem:
-{problem}
+            Problem:
+            {problem}
 
-Conversation:
-{chat}
+            Conversation:
+            {chat}
 
-Return JSON:
-
-{{
- "policy_alignment":"YES or NO",
- "learner_state_summary":"..."
-}}
-"""
+            Return JSON:
+            {{
+              "policy_alignment": "YES or NO",
+              "learner_state_summary": "Concise summary"
+            }}
+            """
 
     res = call_gemini(
-        "Evaluate reasoning style",
+        "BLUEPRINT_ALIGNMENT",
+        "You evaluate reasoning style strictly.",
         prompt,
         temperature=0
     )
@@ -193,7 +233,7 @@ Return JSON:
 
     except:
         aligned = False
-        summary = ""
+        summary = "Unable to parse learner state."
 
     return aligned, summary
 
@@ -225,31 +265,50 @@ def mentor_node(state: AgentState) -> AgentState:
         return state
 
     system_prompt = f"""
-You are Naveen — a structural thinking mentor.
+    You are Naveen — a structural thinking mentor.
 
-Reasoning Policy:
-{json.dumps(policy)}
+    Reasoning Policy:
+    {json.dumps(policy)}
 
-Blueprint:
-{json.dumps(state["mentor_blueprint"])}
+    Blueprint:
+    {json.dumps(state["mentor_blueprint"])}
 
-Learner State:
-{state["learner_state"]}
+    Current Learner Cognitive State:
+    {state["learner_state"]}
 
-Rules:
-- Do NOT reveal the final answer
-- Ask structural questions
-"""
+    Policy Alignment:
+    {"ALIGNED" if state["policy_alignment"] else "MISALIGNED"}
 
+    Rules:
+    - Do NOT reveal the final answer.
+    - Do NOT compute unnecessarily.
+    - Do NOT introduce formulas unless structurally necessary.
+    - Ask sharp structural questions.
+    - Target the learner's cognitive gap directly.
+    - Push conceptual alignment before procedural steps.
+
+    If MISALIGNED:
+        - Identify where their thinking drifted structurally.
+        - Redirect toward invariants, symmetry, structure.
+        - Ask them to pause and rethink
+
+    If ALIGNED but incomplete:
+        - Help compress insight.
+        - Refine their internal model.
+
+    Your goal:
+    Shift the learner's mental model closer to the blueprint structure and ask questions according to policy that will lead the learner.
+    """
     user_prompt = f"""
-Problem:
-{state["problem"]}
+    Problem:
+    {state["problem"]}
 
-Conversation:
-{state["chat"]}
-"""
+    Conversation:
+    {state["chat"]}
+    """
 
     reply = call_gemini(
+        "MENTOR_RESPONSE",
         system_prompt,
         user_prompt
     )
@@ -266,8 +325,8 @@ Conversation:
 def solver_node(state: AgentState) -> AgentState:
 
     prompt = f"""
-The learner has demonstrated correct reasoning.
-
+The learner has demonstrated policy-aligned thinking
+and a correct final answer.
 Problem:
 {state["problem"]}
 
