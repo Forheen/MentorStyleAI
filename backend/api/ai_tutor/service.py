@@ -60,7 +60,9 @@ class AgentState(TypedDict):
 # GEMINI CALL
 # ==================================================
 
-def call_gemini(system_prompt, user_prompt, temperature=0.4):
+def call_gemini(purpose, system_prompt, user_prompt, temperature=0.4):
+
+  
 
     response = client.models.generate_content(
         model=MENTOR_MODEL,
@@ -71,7 +73,11 @@ def call_gemini(system_prompt, user_prompt, temperature=0.4):
         contents=user_prompt
     )
 
-    return response.text.strip()
+    text = response.text.strip()
+
+   
+
+    return text
 
 
 # ==================================================
@@ -135,6 +141,7 @@ def generate_blueprint(problem):
 
 
     raw = call_gemini(
+         "BLUEPRINT_GENERATION",
         system_prompt,
         f"Problem:\n{problem}",
         temperature=0
