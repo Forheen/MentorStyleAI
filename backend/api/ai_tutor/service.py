@@ -388,7 +388,7 @@ def generate_deconstruction(problem):
     output_schema = """
     {
      "normal_explanation": "A normal explanation of the solution with answer, without emphasizing structural insights.",
-    "final_explanation": "...",
+    "final_explanation": "a mentor-style explanation that emphasizes the key structural insights and reasoning steps that unlock the solution, according to the reasoning policy. For critical problems requiring deep insight, the explanation MUST emphasize the structural reasoning and conceptual understanding, not just the procedural steps. The explanation should feel like a mentor synthesizing the reasoning, not like a step-by-step procedural solution. For simpler problems that do not require deep structural insight, a direct explanation and solution is acceptable without overcomplicating.",
     "key_reasoning_lessons": [
         "...",
         "..."
@@ -409,7 +409,10 @@ def generate_deconstruction(problem):
     ------------------------------------------------
     INTERNAL PROCESS (DO NOT OUTPUT)
     ------------------------------------------------
-
+     Analyse the problem into two parts: 1. critical problem 2. simple problem.
+    If simple problem, then directly produce the answer.
+    If critical problem,then apply the reasoning policy to deconstruct the problem and identify the key structural insights that unlock the solution.
+    CRITICAL COGNITIVE RULES:
     1. Deconstruct the problem structure.
     2. Identify invariants, ratios, symmetries, or conserved quantities.
     3. Determine the structural reasoning path that solves the problem.
