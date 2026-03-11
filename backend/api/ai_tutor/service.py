@@ -264,7 +264,7 @@ def mentor_node(state: AgentState) -> AgentState:
 
         explanation_prompt = (
             "Great! You have the correct answer. "
-            "Now explain your reasoning step by step."
+            "Now try to explain your reasoning step by step in a deconstructive manner."
         )
 
         state["chat"].append(("assistant", explanation_prompt))

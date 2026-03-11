@@ -1,10 +1,13 @@
 # api/ai_tutor/schemas.py
 
 from pydantic import BaseModel
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, List, Any
 
 class TutorRequest(BaseModel):
-    problem: str
+
+    problem: Optional[str] = None
+
+    images: Optional[List[str]] = None
 
 
 class ImageResponse(BaseModel):
@@ -20,7 +23,10 @@ class TutorResponse(BaseModel):
 # ---------- CHAT ----------
 
 class ChatStartRequest(BaseModel):
-    problem: str
+
+    problem:Optional[str]=None
+
+    images:Optional[List[str]]=None
 
 
 class ChatStartResponse(BaseModel):

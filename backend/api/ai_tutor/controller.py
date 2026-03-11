@@ -19,7 +19,8 @@ def generate_tutor(problem: str):
 
     return {
         "structured_data": structured_data,
-        "image": image
+        "image": image,
+        "problem": problem
     }
 
 
