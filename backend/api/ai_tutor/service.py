@@ -117,7 +117,6 @@ def generate_blueprint(problem):
     - Default to textbook algebra or mechanical solving
     - Begin with equations unless structurally necessary
     - Overemphasize computation
-    - accept mechanical algebra unless absolutely necessary but if its a small calculation then do it and don't go philosophical over small questions.
 
     Return STRICT JSON only:
 
