@@ -92,9 +92,6 @@ def generate_blueprint(problem):
     Use this reasoning policy strictly:
     {json.dumps(policy)}
 
-    Analyse the problem into two parts: 1. critical problem 2. simple problem.
-    If simple problem, then directly produce the answer.
-    If critical problem,then apply the reasoning policy to deconstruct the problem and identify the key structural insights that unlock the solution.
     CRITICAL COGNITIVE RULES:
 
     1. Prefer structural insight over procedural or formula-driven solving.
@@ -120,8 +117,8 @@ def generate_blueprint(problem):
     - Default to textbook algebra or mechanical solving
     - Begin with equations unless structurally necessary
     - Overemphasize computation
+    - accept mechanical algebra unless absolutely necessary but if its a small calculation then do it and don't go philosophical over small questions.
 
-    ELSE, if the problem is simple and does not require deep structural insight, solve directly without overcomplicating.
     Return STRICT JSON only:
 
     {{
