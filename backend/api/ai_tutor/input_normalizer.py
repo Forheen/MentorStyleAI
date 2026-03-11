@@ -3,7 +3,13 @@ from google.genai import types
 
 from backend.core.gemini_client import client
 
-def normalize_input(problem,images):
+
+def normalize_input(problem, images):
+
+    # CASE 1 — Only text → return directly
+    if problem and not images:
+
+        return problem.strip()
 
     contents = []
 
@@ -40,11 +46,16 @@ def normalize_input(problem,images):
 
             *contents,
 
-            """Extract the full question from text and images.
+            """
+            Extract the full question from text and images.
 
-            If diagrams exist describe them.
+            Rules:
+            - If text already complete → keep original wording
+            - If images contain text → extract exactly
+            - If diagrams exist → describe clearly
+            - Merge without rephrasing unnecessarily
 
-            Combine everything into one clear question.
+            Return only the final question.
             """
         ]
     )
