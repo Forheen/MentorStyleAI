@@ -424,14 +424,7 @@ def generate_deconstruction(problem):
     The explanation should feel like a mentor synthesizing the reasoning,
     not like a step-by-step procedural solution.
 
-    Prefer conceptual explanations such as:
-
-    • identifying invariant quantities
-    • using ratios or proportional reasoning
-    • recognizing structural shortcuts
-    • explaining why the insight works
-
-    Avoid mechanical algebra unless absolutely necessary but if its a small calculation then do it and don't go philosophical.
+    Avoid mechanical algebra unless absolutely necessary but if its a small calculation then do it and don't go philosophical over small questions.
 
     ------------------------------------------------
     OUTPUT FORMAT
