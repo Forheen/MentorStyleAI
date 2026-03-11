@@ -425,10 +425,10 @@ def generate_deconstruction(problem):
     Provide a clear mentor-style explanation that reveals the key insight
     that unlocks the problem.
 
-    For critical problems requiring deep insight, the explanation MUST emphasize the structural reasoning and conceptual understanding, not just the procedural steps.
     The explanation should feel like a mentor synthesizing the reasoning,
     not like a step-by-step procedural solution.
-    For simpler problems that do not require deep structural insight, a direct explanation and solution is acceptable without overcomplicating.
+
+    Avoid mechanical algebra unless absolutely necessary but if its a small calculation then do it and don't go philosophical over small questions.
 
     ------------------------------------------------
     OUTPUT FORMAT
