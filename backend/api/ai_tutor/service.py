@@ -431,7 +431,7 @@ def generate_deconstruction(problem):
     • recognizing structural shortcuts
     • explaining why the insight works
 
-    Avoid mechanical algebra unless absolutely necessary.
+    Avoid mechanical algebra unless absolutely necessary but if its a small calculation then do it and don't go philosophical.
 
     ------------------------------------------------
     OUTPUT FORMAT
