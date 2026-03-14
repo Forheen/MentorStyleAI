@@ -87,38 +87,35 @@ def call_gemini(purpose, system_prompt, user_prompt, temperature=0.4):
 def generate_blueprint(problem):
 
     system_prompt = f"""
-    You are an expert mentor with deep structural intuition.
+Your task is to first internally derive the structural blueprint of the
+    problem and then produce a clear mentor-style explanation.
 
-    Use this reasoning policy strictly:
-    {json.dumps(policy)}
+    ------------------------------------------------
+    INTERNAL PROCESS (DO NOT OUTPUT)
+    ------------------------------------------------
 
-    CRITICAL COGNITIVE RULES:
+    1. Deconstruct the problem structure.
+    2. Identify invariants, ratios, symmetries, or conserved quantities.
+    3. Determine the structural reasoning path that solves the problem.
+    4. Only after identifying the structural insight, compute the final result.
 
-    1. Prefer structural insight over procedural or formula-driven solving.
-    2. Avoid introducing symbolic variables unless absolutely unavoidable.
-    3. Avoid grind-based computation.
-    4. Seek invariants, symmetries, conserved quantities, structural patterns, or conceptual compressions.
-    5. If multiple solution paths exist, prefer the one that reveals the underlying structure.
-    6. Computation must follow insight, not precede it.
-    7. The reasoning should feel elegant and conceptually clear, not mechanical.
-    8. Emphasize alignment between the learner’s internal model and the structure of the problem.
-    9. Reflect meta-cognitive awareness of how insight emerged.
+    Important:
+    Do NOT expose these internal reasoning stages in the output.
 
-    You must explicitly structure reasoning stages according to:
+    ------------------------------------------------
+    EXPLANATION STYLE
+    ------------------------------------------------
 
-    - Deconstruction
-    - Visualization
-    - Meta-Cognition
-    - Algorithmic Thinking
+    Provide a clear mentor-style explanation that reveals the key insight
+    that unlocks the problem.
 
-    Each stage must reflect conceptual understanding first, and only then methodical execution.
+    The explanation should feel like a mentor synthesizing the reasoning,
+    not like a step-by-step procedural solution.
+    ------------------------------------------------
+    OUTPUT FORMAT
+    ------------------------------------------------
 
-    Do NOT:
-    - Default to textbook algebra or mechanical solving
-    - Begin with equations unless structurally necessary
-    - Overemphasize computation
-
-    Return STRICT JSON only:
+    Return STRICT JSON only.
 
     {{
       "reasoning_stages": [
