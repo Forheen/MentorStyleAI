@@ -381,6 +381,9 @@ def router(state: AgentState):
 # ==================================================
 
 def generate_deconstruction(problem):
+
+
+    
     output_schema = """
     {
      "normal_explanation": "A normal explanation of the solution with answer, without emphasizing structural insights.",
@@ -389,6 +392,20 @@ def generate_deconstruction(problem):
         "...",
         "..."
     ],
+    "reasoning_stages": [
+        {{
+          "stage": 1,
+          "goal": "...",
+          "concept_focus": "...",
+          "expected_student_action": "..."
+        }}
+      ],
+      "valid_alternative_paths": [
+        "Alternative structural reasoning aligned with policy"
+      ],
+      "common_mistakes": [
+        "Common mechanical deviation"
+      ],
     "final_answer": "..."
     }
     """
@@ -423,16 +440,6 @@ def generate_deconstruction(problem):
 
     The explanation should feel like a mentor synthesizing the reasoning,
     not like a step-by-step procedural solution.
-
-    Prefer conceptual explanations such as:
-
-    • identifying invariant quantities
-    • using ratios or proportional reasoning
-    • recognizing structural shortcuts
-    • explaining why the insight works
-
-    Avoid mechanical algebra unless absolutely necessary but if its a small calculation then do it and don't go philosophical.
-
     ------------------------------------------------
     OUTPUT FORMAT
     ------------------------------------------------
@@ -440,10 +447,6 @@ def generate_deconstruction(problem):
     Return STRICT JSON only.
 
     Provide:
-
-    1. Final explanation
-    2. Key reasoning lessons
-    3. Final answer
 
     {output_schema}
     """
