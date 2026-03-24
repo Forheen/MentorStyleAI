@@ -47,15 +47,21 @@ def normalize_input(problem, images):
             *contents,
 
             """
-            Extract the full question from text and images.
-
+            
+            Combine the text and images above into a single self-contained problem statement.
+            
             Rules:
-            - If text already complete → keep original wording
+            - If the text is already complete and no images add info → keep original wording
             - If images contain text → extract exactly
-            - If diagrams exist → describe clearly
-            - Merge without rephrasing unnecessarily
-
-            Return only the final question.
+            - If images contain a diagram, figure, or visual → describe EVERY labeled value,
+            measurement, marking, connection, and spatial relationship so someone can
+            understand the problem without seeing the image
+            - If images show a real-world object, scene, or item → describe what is
+            visible clearly and concisely
+            - Merge the text and image descriptions into one coherent problem statement
+            - The output must make full sense on its own without the original image
+            - Return ONLY the final problem statement — no preamble, no commentary
+          
             """
         ]
     )
