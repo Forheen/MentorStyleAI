@@ -1,5 +1,9 @@
 # api/ai_tutor/routes.py
 
+from urllib import request
+
+from urllib import request
+
 from fastapi import APIRouter, HTTPException
 from backend.api.ai_tutor.schemas import *
 from backend.api.ai_tutor.controller import *
@@ -52,7 +56,5 @@ def chat_start(request: ChatStartRequest):
 @router.post("/chat/message")
 def chat_message_api(request: ChatMessageRequest):
 
-    return chat_message_controller(
-        request.session_id,
-        request.message
-    )
+    normalized_message = normalize_input(request.message, request.images)
+    return chat_message_controller(request.session_id, normalized_message)

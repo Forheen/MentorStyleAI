@@ -33,10 +33,10 @@ class ChatStartResponse(BaseModel):
     session_id: str
     reply: str
 
-
 class ChatMessageRequest(BaseModel):
     session_id: str
     message: str
+    images: Optional[List[str]] = None   
 
 
 class ChatMessageResponse(BaseModel):
